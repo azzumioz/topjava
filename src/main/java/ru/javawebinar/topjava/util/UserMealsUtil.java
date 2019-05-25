@@ -28,9 +28,8 @@ public class UserMealsUtil {
         List<UserMealWithExceed> mealExceededList = new ArrayList<>();
 
 //        Map<LocalDate, Integer> caloriesDay = new HashMap<>();
-//        int calDay = 0;
 //        for (UserMeal meal : mealList) {
-//            calDay = caloriesDay.containsKey(meal.getDate()) ? caloriesDay.get(meal.getDate()) + meal.getCalories() : meal.getCalories();
+//            int calDay = caloriesDay.containsKey(meal.getDate()) ? caloriesDay.get(meal.getDate()) + meal.getCalories() : meal.getCalories();
 //            caloriesDay.put(meal.getDate(), calDay);
 //        }
 //        for (UserMeal meal : mealList) {
@@ -43,6 +42,7 @@ public class UserMealsUtil {
         mealList.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getTime(), startTime, endTime))
                 .forEach(meal -> mealExceededList.add(new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(), caloriesDay.get(meal.getDate()) > caloriesPerDay)));
+
         return mealExceededList;
     }
 }
