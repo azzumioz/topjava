@@ -1,19 +1,17 @@
 package ru.javawebinar.topjava.util;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class TimeUtil {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
 
     public static boolean isBetween(LocalTime lt, LocalTime startTime, LocalTime endTime) {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) <= 0;
     }
 
-    public static LocalDateTime parseDate (String date) {
-        LocalDateTime formatDateTime = LocalDateTime.parse(date, DATE_FORMATTER);
-        return formatDateTime;
+    public static LocalDateTime getDateTimeNow() {
+        return LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), LocalTime.now().getHour(), LocalTime.now().getMinute());
     }
+
 }
