@@ -4,18 +4,16 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MapStorage implements Storage {
     private Map<Integer, Meal> map = new ConcurrentHashMap<>();
-    private int id = 0;
+    private AtomicInteger id = new AtomicInteger(0);
 
     @Override
     public Meal add(Meal meal) {
-        meal.setId(id);
-        map.put(id, meal);
-        synchronized (this) {
-            id++;
-        }
+        meal.setId(id.getAndIncrement());
+        map.put(meal.getId(), meal);
         return meal;
     }
 
@@ -37,10 +35,6 @@ public class MapStorage implements Storage {
 
     @Override
     public List<Meal> getAll() {
-        return getMeals();
-    }
-
-    private List<Meal> getMeals() {
         return new ArrayList<>(map.values());
     }
 

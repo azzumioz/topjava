@@ -6,7 +6,6 @@ import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.storage.MapStorage;
 import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +40,7 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String idString = request.getParameter("id");
         Meal meal = new Meal(LocalDateTime.parse(request.getParameter("date"), formatter), request.getParameter("description"), Integer.parseInt(request.getParameter("calories")));
-        if (idString.equals("0")) {
+        if (idString.equals("-1")) {
             storage.add(meal);
         } else {
             storage.update(Integer.parseInt(idString), meal);
@@ -53,28 +52,33 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
         String action = request.getParameter("action");
-        if (action == null) {
+        int id;
+        Meal meal;
+        try {
+            switch (action) {
+                case "delete":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    storage.delete(id);
+                    response.sendRedirect("meals");
+                    return;
+                case "edit":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    meal = storage.get(id);
+                    request.setAttribute("meal", meal);
+                    break;
+                case "add":
+                    meal = new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 0);
+                    meal.setId(-1);
+                    request.setAttribute("meal", meal);
+                    break;
+                default:
+                    throw new NullPointerException();
+            }
+        } catch (NullPointerException e) {
             List<MealTo> mealsWithExcess = MealsUtil.getFilteredWithExcess(storage.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
             request.setAttribute("listMeals", mealsWithExcess);
             request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
             return;
-        }
-        int id;
-        Meal meal;
-        switch (action) {
-            case "delete":
-                id = Integer.parseInt(request.getParameter("id"));
-                storage.delete(id);
-                response.sendRedirect("meals");
-                return;
-            case "edit":
-                id = Integer.parseInt(request.getParameter("id"));
-                meal = storage.get(id);
-                request.setAttribute("meal", meal);
-                break;
-            case "add":
-                meal = new Meal(TimeUtil.getDateTimeNow(), "", 0);
-                request.setAttribute("meal", meal);
         }
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
     }
