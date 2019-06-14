@@ -52,33 +52,32 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to meals");
         String action = request.getParameter("action");
+        if (action == null) {
+            action = "";
+        }
         int id;
         Meal meal;
-        try {
-            switch (action) {
-                case "delete":
-                    id = Integer.parseInt(request.getParameter("id"));
-                    storage.delete(id);
-                    response.sendRedirect("meals");
-                    return;
-                case "edit":
-                    id = Integer.parseInt(request.getParameter("id"));
-                    meal = storage.get(id);
-                    request.setAttribute("meal", meal);
-                    break;
-                case "add":
-                    meal = new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 0);
-                    meal.setId(-1);
-                    request.setAttribute("meal", meal);
-                    break;
-                default:
-                    throw new NullPointerException();
-            }
-        } catch (NullPointerException e) {
-            List<MealTo> mealsWithExcess = MealsUtil.getFilteredWithExcess(storage.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
-            request.setAttribute("listMeals", mealsWithExcess);
-            request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
-            return;
+        switch (action) {
+            case "delete":
+                id = Integer.parseInt(request.getParameter("id"));
+                storage.delete(id);
+                response.sendRedirect("meals");
+                return;
+            case "edit":
+                id = Integer.parseInt(request.getParameter("id"));
+                meal = storage.get(id);
+                request.setAttribute("meal", meal);
+                break;
+            case "add":
+                meal = new Meal(LocalDateTime.now().withNano(0).withSecond(0), "", 0);
+                meal.setId(-1);
+                request.setAttribute("meal", meal);
+                break;
+            default:
+                List<MealTo> mealsWithExcess = MealsUtil.getFilteredWithExcess(storage.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
+                request.setAttribute("listMeals", mealsWithExcess);
+                request.getRequestDispatcher("/WEB-INF/jsp/list.jsp").forward(request, response);
+                return;
         }
         request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
     }
