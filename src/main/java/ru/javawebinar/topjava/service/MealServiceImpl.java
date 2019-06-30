@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
@@ -55,6 +53,8 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public Collection<MealTo> getAllFilter(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return MealsUtil.getWithExcess(repository.getAll(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream().filter(meal -> DateTimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime)).collect(Collectors.toList());
+        return MealsUtil.getWithExcess(repository.getAllFilterByDate(userId, startDate, endDate), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
+                .filter(meal -> DateTimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.toList());
     }
 }

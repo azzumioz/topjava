@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
@@ -29,6 +31,18 @@ public class MealRestController {
 
     public Collection<MealTo> getAllFilter(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAllFilter");
+        if (startDate == null) {
+            startDate = DateTimeUtil.DATEMIN;
+        }
+        if (endDate == null) {
+            endDate = DateTimeUtil.DATEMAX;
+        }
+        if (startTime == null) {
+            startTime = DateTimeUtil.TIMEMIN;
+        }
+        if (endTime == null) {
+            endTime = DateTimeUtil.TIMEMAX;
+        }
         return service.getAllFilter(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime);
     }
 
@@ -39,11 +53,13 @@ public class MealRestController {
 
     public Meal create(Meal meal) {
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        checkNew(meal);
         return service.create(meal, SecurityUtil.authUserId());
     }
 
     public Meal create(Meal meal, int userId) {
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        checkNew(meal);
         return service.create(meal, userId);
     }
 

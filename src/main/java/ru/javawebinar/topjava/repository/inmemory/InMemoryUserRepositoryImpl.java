@@ -38,11 +38,16 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getAll() {
-        return repository.values().stream().sorted((Comparator.comparing(AbstractNamedEntity::getName).thenComparing(AbstractBaseEntity::getId))).collect(Collectors.toList());
+        return repository.values().stream()
+                .sorted((Comparator.comparing(AbstractNamedEntity::getName).thenComparing(AbstractBaseEntity::getId)))
+                .collect(Collectors.toList());
     }
 
     @Override
     public User getByEmail(String email) {
-        return repository.values().stream().filter(user -> user.getEmail().equals(email)).findFirst().get();
+        return repository.values().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 }
