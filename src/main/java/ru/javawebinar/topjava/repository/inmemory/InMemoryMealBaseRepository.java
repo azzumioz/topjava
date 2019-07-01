@@ -23,7 +23,7 @@ public class InMemoryMealBaseRepository {
     }
 
     public boolean delete(int id) {
-        return get(id) != null && repository.remove(id) != null;
+        return repository.get(id) != null && repository.remove(id) != null;
     }
 
     public Meal get(int id) {

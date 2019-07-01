@@ -4,17 +4,21 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
     private Map<Integer, InMemoryMealBaseRepository> repository = new ConcurrentHashMap<>();
+
+    {
+        MealsUtil.MEALS.forEach(meal -> save(meal, meal.getUserId()));
+    }
 
     @Override
     public Meal save(Meal meal, int userId) {
@@ -36,15 +40,17 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        return repository.get(userId).getAll().stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
-                .collect(Collectors.toList());
+        return getFiltered(userId, Objects::nonNull);
     }
 
     @Override
     public Collection<Meal> getAllFilterByDate(int userId, LocalDate startDate, LocalDate endDate) {
+        return getFiltered(userId, meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate));
+    }
+
+    private Collection<Meal> getFiltered(int userId, Predicate<Meal> filter) {
         return repository.get(userId).getAll().stream()
-                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
+                .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }

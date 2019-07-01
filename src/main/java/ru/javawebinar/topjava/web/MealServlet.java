@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -21,8 +20,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
-    private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
-
     //    private MealRepository repository;
     private MealRestController mealRestController;
     private ConfigurableApplicationContext appCtx;
@@ -32,7 +29,6 @@ public class MealServlet extends HttpServlet {
         super.init(config);
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         mealRestController = appCtx.getBean(MealRestController.class);
-        MealsUtil.MEALS.forEach(meal -> mealRestController.create(meal, meal.getUserId()));
     }
 
     @Override
@@ -81,11 +77,9 @@ public class MealServlet extends HttpServlet {
                 String endDate = request.getParameter("endDate");
                 String startTime = request.getParameter("startTime");
                 String endTime = request.getParameter("endTime");
-//                if (!startDate.equals("") && !endDate.equals("") && !startTime.equals("") && !endTime.equals("")) {
-                    request.setAttribute("meals",
-                            mealRestController.getAllFilter(startDate.equals("") ? null : LocalDate.parse(startDate), endDate.equals("") ? null : LocalDate.parse(endDate), startTime.equals("") ? null : LocalTime.parse(startTime), endTime.equals("") ? null : LocalTime.parse(endTime)));
-                    request.getRequestDispatcher("/meals.jsp").forward(request, response);
-//                }
+                request.setAttribute("meals",
+                        mealRestController.getAllFilter(startDate.equals("") ? null : LocalDate.parse(startDate), endDate.equals("") ? null : LocalDate.parse(endDate), startTime.equals("") ? null : LocalTime.parse(startTime), endTime.equals("") ? null : LocalTime.parse(endTime)));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
