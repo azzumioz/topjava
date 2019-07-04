@@ -40,7 +40,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        return getFiltered(userId, Objects::nonNull);
+        return getFiltered(userId, meal -> true);
     }
 
     @Override
@@ -49,7 +49,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     private Collection<Meal> getFiltered(int userId, Predicate<Meal> filter) {
-        return repository.get(userId).getAll().stream()
+        InMemoryMealBaseRepository meals = repository.get(userId);
+        return meals == null ? Collections.emptyList() :  meals.getAll().stream()
                 .filter(filter)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
