@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -29,19 +29,27 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
+    @Rule
+    public final RuleTest ruleTest = new RuleTest();
+    private ExpectedException exception = ExpectedException.none();
+
     @Test
     public void delete() throws Exception {
         service.delete(MEAL1_ID, USER_ID);
         assertMatch(service.getAll(USER_ID), MEAL6, MEAL5, MEAL4, MEAL3, MEAL2);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deleteNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity");
         service.delete(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deleteNotOwn() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity");
         service.delete(MEAL1_ID, ADMIN_ID);
     }
 
@@ -60,13 +68,17 @@ public class MealServiceTest {
         assertMatch(actual, ADMIN_MEAL1);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity");
         service.get(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotOwn() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity");
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -77,8 +89,10 @@ public class MealServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void updateNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
+        exception.expectMessage("Not found entity");
         service.update(MEAL1, ADMIN_ID);
     }
 
