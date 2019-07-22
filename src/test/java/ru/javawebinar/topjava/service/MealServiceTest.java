@@ -31,7 +31,9 @@ public class MealServiceTest {
 
     @Rule
     public final RuleTest ruleTest = new RuleTest();
-    private ExpectedException exception = ExpectedException.none();
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Test
     public void delete() throws Exception {
