@@ -18,8 +18,6 @@ import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -34,30 +32,25 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
-    private static final List<String> result = new ArrayList<>();
+    private static final StringBuilder stringBuilder = new StringBuilder();
 
     private static void logInfo(Description description, String status, long nanos) {
-        result.add("Test " + description.getMethodName() + "\t" + status + ":\t" + TimeUnit.NANOSECONDS.toMillis(nanos) + " ms");
+        stringBuilder.append("Test " + description.getMethodName() + "\t" + status + ":\t" + TimeUnit.NANOSECONDS.toMillis(nanos) + " ms\n");
     }
 
     @Autowired
     private MealService service;
 
     @AfterClass
-    public static void  print() {
-        result.forEach(x -> log.info(x));
+    public static void print() {
+        log.info(stringBuilder.toString());
     }
 
     @Rule
     public Stopwatch stopwatch = new Stopwatch() {
         @Override
-        protected void succeeded(long nanos, Description description) {
-            logInfo(description, "succeeded", nanos);
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            logInfo(description, "failed", nanos);
+        protected void finished(long nanos, Description description) {
+            logInfo(description, "finished", nanos);
         }
     };
 
