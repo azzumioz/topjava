@@ -9,7 +9,7 @@ import ru.javawebinar.topjava.Profiles;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Repository
+
 public class JdbcHsqlMealRepository extends JdbcMealRepository {
 
     public JdbcHsqlMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
