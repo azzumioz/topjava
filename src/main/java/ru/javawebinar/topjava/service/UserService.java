@@ -39,7 +39,7 @@ public class UserService {
         return checkNotFoundWithId(repository.get(id), id);
     }
 
-    public User getWithMeals (int id) {
+    public User getWithMeals(int id) throws NotFoundException {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
 

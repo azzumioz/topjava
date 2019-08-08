@@ -39,8 +39,4 @@ public class InMemoryUserRepository extends InMemoryBaseRepository<User> impleme
                 .orElse(null);
     }
 
-    @Override
-    public User getWithMeals(int id) {
-        return null;
-    }
 }
