@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.repository.datajpa;
+package ru.javawebinar.topjava.service.datajpa;
 
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,10 +11,10 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 
 @ActiveProfiles(Profiles.DATAJPA)
-public class DataJpaMealStorageTest extends MealServiceTest {
+public class DataJpaMealServiceTest extends MealServiceTest {
 
     @Test
-    void getWithUser() throws Exception {
+    public void getWithUser() throws Exception {
         Meal adminMeal = service.getWithUser(ADMIN_MEAL_ID, ADMIN_ID);
         assertMatch(adminMeal, ADMIN_MEAL1);
         UserTestData.assertMatch(adminMeal.getUser(), UserTestData.ADMIN);

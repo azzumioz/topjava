@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.repository.datajpa;
+package ru.javawebinar.topjava.service.datajpa;
 
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -11,7 +11,7 @@ import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 
 @ActiveProfiles(Profiles.DATAJPA)
-public class DataJpaUserStorageTest extends UserServiceTest {
+public class DataJpaUserServiceTest extends UserServiceTest {
 
     @Test
     public void getWithMeals() {
