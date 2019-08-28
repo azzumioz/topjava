@@ -28,14 +28,13 @@ public class JspMealController extends AbstractMealController {
         super(service);
     }
 
-    @GetMapping(params = {"action=delete"})
-//    @GetMapping("/delete")
-    public String delete(HttpServletRequest request, Model model) {
+    @GetMapping("/delete")
+    public String delete(HttpServletRequest request) {
         super.delete(getId(request));
         return "redirect:/meals";
     }
 
-    @GetMapping(params = {"action=filter"})
+    @GetMapping("/filter")
     public String filter(HttpServletRequest request, Model model) {
         LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
         LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
@@ -53,13 +52,13 @@ public class JspMealController extends AbstractMealController {
         return "meals";
     }
 
-    @GetMapping(params = {"action=create"})
+    @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
         return "mealForm";
     }
 
-    @GetMapping(params = {"action=update"})
+    @GetMapping("/update")
     public String update(HttpServletRequest request, Model model) {
         model.addAttribute("meal", super.get(getId(request)));
         return "mealForm";
