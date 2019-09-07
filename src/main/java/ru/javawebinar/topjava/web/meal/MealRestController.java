@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
-
 @RestController
 @RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController extends AbstractMealController {
@@ -59,23 +56,18 @@ public class MealRestController extends AbstractMealController {
         super.update(meal, id);
     }
 
-//    @GetMapping("/filter")
-//    public List<MealTo> getBetween(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-//                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
-//        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
-//    }
+    @GetMapping("/filter2")
+    public List<MealTo> getBetween(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime) {
+        return super.getBetween(startDateTime.toLocalDate(), startDateTime.toLocalTime(), endDateTime.toLocalDate(), endDateTime.toLocalTime());
+    }
 
     @GetMapping("/filter")
-    public List<MealTo> getBetween(@RequestParam String startDate,
-                                   @RequestParam String endDate,
-                                   @RequestParam String startTime,
-                                   @RequestParam String endTime
-    ) {
-        LocalDate startDateLocal = parseLocalDate(startDate);
-        LocalDate endDateLocal = parseLocalDate(endDate);
-        LocalTime startTimeLocal = parseLocalTime(startTime);
-        LocalTime endTimeLocal = parseLocalTime(endTime);
-        return super.getBetween(startDateLocal, startTimeLocal, endDateLocal, endTimeLocal);
+    public List<MealTo> getBetween(@RequestParam LocalDate startDate,
+                                   @RequestParam LocalTime startTime,
+                                   @RequestParam LocalDate endDate,
+                                   @RequestParam LocalTime endTime) {
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 
 }

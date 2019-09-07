@@ -23,6 +23,16 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="ru.javawebinar.topjava.web.ConverterDateTime.ConverterDate"/>
+                <bean class="ru.javawebinar.topjava.web.ConverterDateTime.ConverterTime"/>
+            </set>
+        </property>
+    </bean>
+
     <context:component-scan base-package="ru.javawebinar.**.web"/>
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be referred to inside JSP files -->
@@ -43,6 +53,7 @@
         </property>
     </bean>
 -->
+
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
           p:cacheSeconds="5"
           p:defaultEncoding="UTF-8">

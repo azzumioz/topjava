@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
@@ -19,15 +21,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
-import static ru.javawebinar.topjava.TestUtil.readFromJson;
+import static ru.javawebinar.topjava.TestUtil.*;
 import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 
 class MealRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = MealRestController.REST_URL + '/';
+
+    @Autowired
+    protected MealService mealService;
 
     @Test
     void testGet() throws Exception {
@@ -35,7 +39,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MEAL1));
+                .andExpect(contentJson(MEAL1, Meal.class));
     }
 
     @Test
@@ -52,7 +56,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         mockMvc.perform(get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(MealsUtil.getWithExcess(MEALS, authUserCaloriesPerDay())));
+                .andExpect(contentJson(MEALS_TO, MealTo.class));
     }
 
     @Test
@@ -80,20 +84,26 @@ class MealRestControllerTest extends AbstractControllerTest {
         assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
     }
 
-//    @Test
-//    void testGetBetween() throws Exception {
-//        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter?startDateTime=2015-05-31T09:00:00&endDateTime=2015-05-31T14:00:00"))
-//                .andExpect(status().isOk())
-//                .andDo(print())
-//                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-//                .andReturn();
-//        List<MealTo> returned = readListFromJsonMvcResult(mvcResult, MealTo.class);
-//        assertMatch(returned, MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true));
-//    }
+    @Test
+    void testGetBetween2() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter2")
+                .param("startDateTime", "2015-05-31T09:00:00")
+                .param("endDateTime", "2015-05-31T14:00:00"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
+        List<MealTo> returned = readListFromJsonMvcResult(mvcResult, MealTo.class);
+        assertMatch(returned, MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true));
+    }
 
     @Test
     void testGetBetween() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter?startDate=2015-05-31&endDate=2015-05-31&startTime=09:00&endTime=14:00"))
+        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter")
+                .param("startDate", "2015-05-31")
+                .param("startTime", "09:00")
+                .param("endDate", "2015-05-31")
+                .param("endTime", "14:00"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
