@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.web;
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.to.MealTo;
 
 import java.util.List;
 

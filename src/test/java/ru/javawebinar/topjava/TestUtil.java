@@ -3,6 +3,8 @@ package ru.javawebinar.topjava;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -27,12 +29,16 @@ public class TestUtil {
         return JsonUtil.readValues(getContent(result), clazz);
     }
 
-    public static <T> ResultMatcher contentJson(Iterable<T> expected, Class<T> clazz) {
+    public static ResultMatcher contentJson(Iterable<MealTo> expected, Class<MealTo> clazz) {
         return result -> assertThat(readListFromJsonMvcResult(result, clazz)).usingFieldByFieldElementComparator().isEqualTo(expected);
     }
 
-    public static <T> ResultMatcher contentJson(T expected, Class<T> clazz) {
-        return result -> contentJson(List.of(expected), clazz);
+    public static ResultMatcher contentJson(Meal expected, Class<Meal> clazz) {
+        return result -> contentJson(expected, clazz);
+    }
+
+    public static ResultMatcher contentJson(MealTo... expected) {
+        return result -> contentJson(List.of(expected), MealTo.class);
     }
 }
 

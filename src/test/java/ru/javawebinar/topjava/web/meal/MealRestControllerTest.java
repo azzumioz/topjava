@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.web.meal;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -22,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.*;
-import static ru.javawebinar.topjava.TestUtil.readListFromJsonMvcResult;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
@@ -86,20 +84,18 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void testGetBetween2() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter2")
+        mockMvc.perform(get(REST_URL + "filter2")
                 .param("startDateTime", "2015-05-31T09:00:00")
                 .param("endDateTime", "2015-05-31T14:00:00"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andReturn();
-        List<MealTo> returned = readListFromJsonMvcResult(mvcResult, MealTo.class);
-        assertMatch(returned, MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true));
+                .andExpect(contentJson(MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true)));
     }
 
     @Test
     void testGetBetween() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get(REST_URL + "filter")
+        mockMvc.perform(get(REST_URL + "filter")
                 .param("startDate", "2015-05-31")
                 .param("startTime", "09:00")
                 .param("endDate", "2015-05-31")
@@ -107,9 +103,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andReturn();
-        List<MealTo> returned = readListFromJsonMvcResult(mvcResult, MealTo.class);
-        assertMatch(returned, MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true));
+                .andExpect(contentJson(MealsUtil.createWithExcess(MEAL5, true), MealsUtil.createWithExcess(MEAL4, true)));
     }
 
 }
