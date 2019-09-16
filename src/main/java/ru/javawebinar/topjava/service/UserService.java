@@ -57,4 +57,10 @@ public class UserService {
     public User getWithMeals(int id) {
         return checkNotFoundWithId(repository.getWithMeals(id), id);
     }
+
+    public void setEnabled(int id, boolean enable) {
+        Assert.notNull(enable, "enable must no be null");
+        checkNotFoundWithId(repository.setEnabled(id, enable), id);
+
+    }
 }
