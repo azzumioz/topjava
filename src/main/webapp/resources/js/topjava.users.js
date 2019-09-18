@@ -45,14 +45,16 @@ $(function () {
     })
 });
 
-
 function changeEnabled(id, enabled) {
     $.ajax({
-        type: "PATCH",
-        url: context.ajaxUrl + id + "&" + enabled
+        type: "POST",
+        url: context.ajaxUrl + id + "&" + enabled,
+        success: function () {
+            let patchedRow = $("tr[id=" + id + "]");
+            successNoty(enabled ? 'is Enabled' : 'is Disabled');
+            enabled ? patchedRow.css("opacity", "1") : patchedRow.css("opacity", "0.5");
+        }
     }).done(function () {
-        successNoty("User with id " + id + " enabled is " + enabled);
-        let patchedRow = $("tr[id=" + id + "]");
-        enabled ? patchedRow.css("opacity", "1") : patchedRow.css("opacity", "0.5");
+        updateTable();
     })
 }

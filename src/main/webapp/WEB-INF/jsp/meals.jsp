@@ -121,7 +121,7 @@
                     <button onclick="window.history.back()" type="button" class="btn btn-secondary"><span
                             class="fa fa-close"></span><spring:message
                             code="common.cancel"/></button>
-                    <button onclick="save()" type="submit" class="btn btn-primary"><span
+                    <button onclick="saveMeal()" type="submit" class="btn btn-primary"><span
                             class="fa fa-check"></span><spring:message code="common.save"/></button>
                 </div>
             </div>

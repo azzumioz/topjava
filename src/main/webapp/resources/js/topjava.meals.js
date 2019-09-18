@@ -46,6 +46,18 @@ function filter() {
     });
 }
 
+function saveMeal() {
+    $.ajax({
+        type: "POST",
+        url: context.ajaxUrl,
+        data: form.serialize()
+    }).done(function () {
+        filter();
+        $("#editRow").modal("hide");
+        successNoty("Saved");
+    });
+}
+
 function cancel() {
     $("#filter").find(":input").val("");
     updateTable();
