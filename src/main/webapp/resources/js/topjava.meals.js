@@ -47,19 +47,17 @@ function filter() {
 }
 
 function saveMeal() {
-    $.ajax({
-        type: "POST",
-        url: context.ajaxUrl,
-        data: form.serialize()
-    }).done(function () {
-        filter();
-        $("#editRow").modal("hide");
-        successNoty("Saved");
-    });
+    save();
+    filter();
 }
 
 function cancel() {
     $("#filter").find(":input").val("");
     updateTable();
     successNoty("Cancel");
+}
+
+function deleteMeal(id) {
+    deleteRow(id);
+    filter();
 }

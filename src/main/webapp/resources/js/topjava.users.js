@@ -35,26 +35,32 @@ $(function () {
                         0,
                         "asc"
                     ]
-                ]
+                ],
+                "createdRow": function (row, data, dataIndex) {
+                    if (($(row).attr("data-userenable")) === 'false') {
+                        $(row).css("opacity", "0.5");
+                    }
+                }
             })
         }
     );
 
     $('.checked').change(function () {
-        changeEnabled($(this).parents().eq(1).attr("id"), $(this).is(":checked"));
+
+        let id = $(this).parents().eq(1).attr("id");
+        let enabled = $(this).is(":checked");
+
+        $.ajax({
+            type: "POST",
+            url: context.ajaxUrl + id + "&" + enabled
+        })
+            .done(function () {
+                let patchedRow = $("tr[id=" + id + "]");
+                successNoty(enabled ? 'is Enabled' : 'is Disabled');
+                enabled ? patchedRow.css("opacity", "1") : patchedRow.css("opacity", "0.5");
+            })
+            .fail(function () {
+                $(this).prop("checked", !enabled);
+            });
     })
 });
-
-function changeEnabled(id, enabled) {
-    $.ajax({
-        type: "POST",
-        url: context.ajaxUrl + id + "&" + enabled,
-        success: function () {
-            let patchedRow = $("tr[id=" + id + "]");
-            successNoty(enabled ? 'is Enabled' : 'is Disabled');
-            enabled ? patchedRow.css("opacity", "1") : patchedRow.css("opacity", "0.5");
-        }
-    }).done(function () {
-        updateTable();
-    })
-}
