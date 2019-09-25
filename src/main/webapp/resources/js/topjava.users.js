@@ -49,6 +49,7 @@ $(function () {
 
         let id = $(this).parents().eq(1).attr("id");
         let enabled = $(this).is(":checked");
+        let $t = $(this);
 
         $.ajax({
             type: "POST",
@@ -60,7 +61,7 @@ $(function () {
                 enabled ? patchedRow.css("opacity", "1") : patchedRow.css("opacity", "0.5");
             })
             .fail(function () {
-                $(this).prop("checked", !enabled);
+                $t.prop("checked", !enabled);
             });
     })
 });
