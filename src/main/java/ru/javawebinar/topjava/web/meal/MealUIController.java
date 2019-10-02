@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.Util.checkResultBinding;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkResultBinding;
 
 @RestController
 @RequestMapping("/ajax/profile/meals")
