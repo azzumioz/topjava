@@ -35,8 +35,8 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
-    private static final String EXCEPTION_DUPLICATE_EMAIL = "user.duplicateMail";
-    private static final String EXCEPTION_DUPLICATE_DATETIME = "meal.duplicateDateTime";
+    public static final String EXCEPTION_DUPLICATE_EMAIL = "user.duplicateMail";
+    public static final String EXCEPTION_DUPLICATE_DATETIME = "meal.duplicateDateTime";
 
     private static final Map<String, String> CONSTRAINS_I18N_MAP = Map.of(
             "users_unique_email_idx", EXCEPTION_DUPLICATE_EMAIL,
@@ -82,6 +82,12 @@ public class ExceptionInfoHandler {
                 .toArray(String[]::new);
 
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR, details);
+    }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)  // 422
+    @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
+    public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
+        return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
